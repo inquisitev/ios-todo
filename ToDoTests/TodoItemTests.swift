@@ -33,13 +33,35 @@ final class TodoItemTests: XCTestCase {
         XCTAssertEqual(expectedTitle, actualTitle, "Expected title to be \(expectedTitle), but it actually was \(actualTitle)")
     }
     
-    func test_whenDescriptionGiven_descriptionIsSet(){
+    func test_whenDescriptionGiven_descriptionIsSet() throws {
         let expectedDescription = "a description."
         let item = ToDoItem(title: "Dummy", itemDescription: "a description.")
         XCTAssertNotNil(item.description, "Expected that description is not nil")
-        let actualDescription = item.description!
+        let actualDescription = try XCTUnwrap(item.description)!
         XCTAssertEqual(expectedDescription, actualDescription, "Expected description to be \(expectedDescription), but it actually was \(actualDescription)")
     }
     
-
+    func test_init_takesTimeStamp(){
+        let timeStamp: TimeInterval = 42.0
+        _ = ToDoItem(title: "Dummy", timeStamp: timeStamp)
+    }
+    
+    func test_whenGivenTimeStamp_timeStampIsSet() throws{
+        let timeStamp: TimeInterval = 42.0
+        let item = ToDoItem(title: "Dummy", timeStamp: timeStamp)
+        XCTAssertNotNil(item.timeStamp)
+        let actualTimeStamp = try XCTUnwrap(item.timeStamp)
+        XCTAssertEqual(actualTimeStamp, timeStamp, accuracy: 0.000_001, "Expected timestamp to be \(timeStamp),  but it was \(actualTimeStamp)")
+    }
+    
+    func test_init_takesLocation(){
+        let location = Location(name: "Title")
+        _ = ToDoItem(title: "Dummy", location: location)
+    }
+    
+    func test_whenLocationProvided_locationIsSet() throws {
+        let expectedLocation = Location(name: "Title")
+        let item = ToDoItem(title: "Dummy", location: expectedLocation)
+        _ = try XCTUnwrap(item.location)
+    }
 }

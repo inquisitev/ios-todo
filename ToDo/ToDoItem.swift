@@ -8,10 +8,14 @@
 import Foundation
 
 struct ToDoItem{
-    init(title: String, itemDescription: String? = nil){
+    init(title: String, itemDescription: String? = nil, timeStamp: TimeInterval? = nil, location: Location? = nil){
         self.title = title
         self.description = itemDescription
+        self.timeStamp = timeStamp
+        self.location = location
     }
     let title: String
     let description: String?
+    let timeStamp: TimeInterval?
+    let location: Location?
 }
