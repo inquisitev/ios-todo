@@ -77,7 +77,7 @@ final class ToDoItemStoreTests: XCTestCase{
         }
         wait(for: [publisherExpectation], timeout: 1)
         token.cancel()
-        XCTAssertEqual(result, [todoItem])
+        XCTAssertEqual(result?.first?.done, true)
         
     }
 }

@@ -34,6 +34,7 @@ class ToDoItemStore{
         
         if let index = items.firstIndex(of: item){
             items[index] = mutableItem
+            saveItems()
         }
     }
     
