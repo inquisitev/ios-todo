@@ -6,15 +6,13 @@
 //
 
 import Foundation
-import CoreLocation
-
-struct Location{
+struct Location: Equatable, Codable{
     
-    init(name: String, coordinate: CLLocation? = nil){
+    init(name: String, coordinate: Coordinate? = nil){
         self.name = name
         self.coordinate = coordinate
     }
     
     let name: String
-    let coordinate: CLLocation?
+    let coordinate: Coordinate?
 }

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import CoreLocation
 @testable import ToDo
 
 final class TodoItemTests: XCTestCase {
@@ -64,4 +65,50 @@ final class TodoItemTests: XCTestCase {
         let item = ToDoItem(title: "Dummy", location: expectedLocation)
         _ = try XCTUnwrap(item.location)
     }
+    
+    func test_item_equal_to_itself(){
+        let item = ToDoItem(title: "Dummy")
+        XCTAssertEqual(item, item)
+    }
+    
+    func test_item_notEqualToDifferentItem(){
+        let firstItem = ToDoItem(title: "Dummy")
+        let secondItem = ToDoItem(title: "Smarty")
+        XCTAssertNotEqual(firstItem, secondItem)
+    }
+    
+    func test_itemWithDescription_EqualToItself(){
+        let item = ToDoItem(title: "Dummy", itemDescription: "description")
+        XCTAssertEqual(item, item)
+    }
+    
+    func test_itemsWithDifferentDescription_NotEqual(){
+        let firstItem = ToDoItem(title: "Dummy", itemDescription: "First Description")
+        let secondItem = ToDoItem(title: "Dummy", itemDescription: "Second Description")
+        XCTAssertNotEqual(firstItem, secondItem)
+    }
+    
+    func test_itemWithTimeStamp_EqualToItself(){
+        let item = ToDoItem(title: "Dummy", timeStamp: TimeInterval(32.0))
+        XCTAssertEqual(item, item)
+    }
+    
+    func test_itemsWithDifferentTimeStamp_NotEqual(){
+        let firstItem = ToDoItem(title: "Dummy", timeStamp: TimeInterval(35.0))
+        let secondItem = ToDoItem(title: "Dummy", timeStamp: TimeInterval(32.0))
+        XCTAssertNotEqual(firstItem, secondItem)
+    }   
+    
+    
+    func test_itemWithLocation_EqualToItself(){
+        let item = ToDoItem(title: "Dummy", timeStamp: TimeInterval(32.0))
+        XCTAssertEqual(item, item)
+    }
+    
+    func test_itemsWithDifferentLocation_NotEqual(){
+        let firstItem = ToDoItem(title: "Dummy", location: Location(name: "Home", coordinate: Coordinate(latitude: 1, longitude: 2)))
+        let secondItem = ToDoItem(title: "Dummy", location: Location(name: "Home", coordinate: Coordinate(latitude: 4, longitude: 3)))
+        XCTAssertNotEqual(firstItem, secondItem)
+    }
+    
 }
