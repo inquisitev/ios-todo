@@ -8,15 +8,23 @@
 import Foundation
 import Combine
 
-class ToDoItemStore{
+protocol ToDoItemStoreProtocol{
+    
+    var itemPublisher: CurrentValueSubject<[ToDoItem], Never> { get set}
+    
+    func check(_: ToDoItem)
+
+}
+
+class ToDoItemStore: ToDoItemStoreProtocol{
+    var itemPublisher = CurrentValueSubject<[ToDoItem], Never>([])
+    
     
     let fileName: String
     init(fileName: String = "todoitems"){
         self.fileName = fileName
         loadItems()
     }
-    var itemPublisher = CurrentValueSubject<[ToDoItem], Never>([])
-    
     private var items: [ToDoItem] = [] {
         didSet {
             itemPublisher.send(items)

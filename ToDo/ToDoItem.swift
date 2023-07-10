@@ -26,3 +26,9 @@ struct ToDoItem: Equatable, Codable{
     let location: Location?
     var done: Bool = false
 }
+
+extension ToDoItem: Hashable{
+    func hash(into hasher: inout Hasher){
+        hasher.combine(id)
+    }
+}
