@@ -93,4 +93,5 @@ class ToDoItemInputViewTests: XCTestCase{
         
         XCTAssertEqual(delegateMock.item?.title, "Dummy")
     }
+    
 }

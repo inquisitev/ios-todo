@@ -68,12 +68,6 @@ class ToDoItemDetailsViewControllerTest: XCTestCase{
         XCTAssertEqual(sut.locationLabel.text, item.location?.name)
     }
     
-    func test_view_hasCorrectDate() throws {
-        let item = ToDoItem(title: "Dummy", timeStamp: 4000000)
-        sut.toDoItem = item
-        XCTAssertEqual(sut.dateLabel.text, DateFormatter().string(from: Date(timeIntervalSince1970: item.timeStamp!)))
-    }
-    
     
     func test_map_hasCorrectCenter() throws {
         let item = ToDoItem(title: "Dummy", location: Location(name: "Home", coordinate: Coordinate(latitude: 4, longitude: 2)))

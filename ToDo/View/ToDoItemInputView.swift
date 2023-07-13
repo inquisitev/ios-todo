@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-protocol ToDOItemInputViewDelegate{
+protocol ToDoItemInputViewDelegate{
     func addToDoItem(with: ToDoItemData, coordinate: Coordinate?)
 }
 
@@ -17,7 +17,7 @@ struct ToDoItemInputView: View {
     @ObservedObject var data: ToDoItemData
     @State var withDate = false
     let apiClient: APIClientProtocol
-    var delegate: ToDOItemInputViewDelegate?
+    var delegate: ToDoItemInputViewDelegate?
     
     var didAppear: ((Self) -> Void)?
     

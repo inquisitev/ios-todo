@@ -10,6 +10,7 @@ import Combine
 
 protocol ToDoListViewControllerProtocol{
     func selectToDoItem(_ viewController: UIViewController, item: ToDoItem)
+    func addToDoItem(_ viewController: UIViewController)
 }
 
 enum Section{
@@ -26,6 +27,22 @@ class ToDoItemListViewController: UIViewController {
     private var dataSource: UITableViewDiffableDataSource<Section, ToDoItem>?
     private var items: [ToDoItem] = []
     private var token: AnyCancellable?
+    
+    override func viewDidAppear(_ animated: Bool)
+    {
+        super.viewDidAppear(animated)
+        token = toDoItemStore?.itemPublisher
+            .sink(receiveValue: { [weak self] items in
+            self?.items = items
+            self?.update(with: items)
+        })
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        token?.cancel()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = UITableViewDiffableDataSource<Section, ToDoItem>(
@@ -40,6 +57,7 @@ class ToDoItemListViewController: UIViewController {
             }
             return cell
         })
+        dateFormatter.dateStyle = .short
         tableView.register(ToDoItemCell.self, forCellReuseIdentifier: "ToDoItemCell")
         token = toDoItemStore?.itemPublisher.sink(receiveValue: {
             [weak self] items in
@@ -49,8 +67,13 @@ class ToDoItemListViewController: UIViewController {
         
         tableView.delegate = self
         // Do any additional setup after loading the view.
+        
+        let addItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(add(_:)))
+        navigationItem.rightBarButtonItem = addItem
     }
-    
+    @objc func add(_ sender: UIBarButtonItem){
+        delegate?.addToDoItem(self)
+    }
     private func update(with items: [ToDoItem]){
         var snapshot = NSDiffableDataSourceSnapshot<Section, ToDoItem>()
         snapshot.appendSections([.todo, .done])
@@ -58,24 +81,23 @@ class ToDoItemListViewController: UIViewController {
         snapshot.appendItems(items.filter({$0.done}),toSection: .done)
         dataSource?.apply(snapshot)
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
 extension ToDoItemListViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        let item = items[indexPath.row]
+        let item: ToDoItem
+        switch indexPath.section{
+        case 0:
+            let filteredItems = items.filter({!$0.done})
+            item = filteredItems[indexPath.row]
+        default:
+            let filteredItems = items.filter({true == $0.done})
+            item = filteredItems[indexPath.row]
+            
+        }
+        
         delegate?.selectToDoItem(self, item: item)
     }
 }

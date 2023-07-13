@@ -8,7 +8,7 @@
 import Foundation
 @testable import ToDo
 
-class ToDoItemInputViewDelegateMock: ToDOItemInputViewDelegate
+class ToDoItemInputViewDelegateMock: ToDoItemInputViewDelegate
 {
     var item: ToDoItemData?
     var coordinate: Coordinate?

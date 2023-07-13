@@ -11,7 +11,11 @@ import MapKit
 class ToDoItemDetailsViewController: UIViewController {
     
     var toDoItemStore: ToDoItemStoreProtocol!
-    let dateFormatter = DateFormatter()
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter
+    }()
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var locationLabel: UILabel!

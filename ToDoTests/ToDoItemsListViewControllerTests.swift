@@ -14,7 +14,7 @@ class ToDoItemsListViewControllerTests: XCTestCase{
     override func setUpWithError() throws {
         let storyboard = UIStoryboard(name:
                                         "Main", bundle: nil)
-        sut = try XCTUnwrap(storyboard.instantiateInitialViewController() as? ToDoItemListViewController)
+        sut = try XCTUnwrap(storyboard.instantiateViewController(withIdentifier: "ToDoItemListViewController") as? ToDoItemListViewController)
         toDoItemStoreMock = ToDoItemStoreMock()
         sut?.toDoItemStore = toDoItemStoreMock
         sut!.loadViewIfNeeded()
@@ -100,7 +100,7 @@ class ToDoItemsListViewControllerTests: XCTestCase{
         XCTAssertEqual(sectionCount, 2)
     }
     
-    func test_didSelectCellAt_ShouldCallDelegate() throws{
+    func test_didSelectCellAt_ShouldCallDelegate() throws {
         let delegateMock = ToDoListViewControllerProtocolMock()
         sut!.delegate = delegateMock
         let toDoItem = ToDoItem(title: "Dummy")
@@ -111,5 +111,36 @@ class ToDoItemsListViewControllerTests: XCTestCase{
     
         XCTAssertEqual(delegateMock.selectToDoItemReceivedArgs!.item, toDoItem)
     }
-
+    
+    func test_navigationBarButton_shouldPressDelegate() throws {
+        let delegateMock = ToDoListViewControllerProtocolMock()
+        sut!.delegate = delegateMock
+        let addButton = sut?.navigationItem.rightBarButtonItem
+        let target = try XCTUnwrap(addButton?.target)
+        let action = try XCTUnwrap(addButton?.action)
+        _ = target.perform(action, with: addButton)
+        XCTAssertEqual(delegateMock.addToDoItemCallCount, 1)
+    }
+    
+    func test_dateFormatter_isNotNone(){
+        XCTAssertNotEqual(sut?.dateFormatter.dateStyle, DateFormatter.Style.none)
+    }
+    
+    func test_didSelectCell_shouldShowDelegate() throws
+    {
+        let delegateMock = ToDoListViewControllerProtocolMock()
+        sut?.delegate = delegateMock
+        var doneItem = ToDoItem(title: "Done Item")
+        doneItem.done = true
+        let toDoItem = ToDoItem(title: "Item")
+        toDoItemStoreMock.itemPublisher.send([doneItem, toDoItem])
+        
+        let tableView = try XCTUnwrap(sut?.tableView)
+        let indexPath = IndexPath(row: 0, section: 0)
+        tableView.delegate?.tableView?(
+            tableView, didSelectRowAt: indexPath)
+        
+        XCTAssertEqual(delegateMock.selectToDoItemReceivedArgs?.item, toDoItem)
+    }
+    
 }
